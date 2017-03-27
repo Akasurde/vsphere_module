@@ -1,0 +1,36 @@
+---
+- name: Testing vSphere folders
+  hosts: localhost
+  gather_facts: False
+
+  tasks:
+  - include: vsphere_depends.yml
+    tags: always
+
+  - name: Creating folder
+    vsphere_folder:
+      hostname: "{{vsphere_address}}"
+      username: "{{vsphere_user}}"
+      password: "{{vsphere_password}}"
+      folder: TestFolder
+      folder_type: vm
+      operation: create
+      parent_folder: DeployTest
+    register: result
+
+  - name: Renaming folder
+    vsphere_folder:
+      hostname: "{{vsphere_address}}"
+      username: "{{vsphere_user}}"
+      password: "{{vsphere_password}}"
+      folder: TestFolder
+      new_folder: TestFolderRenamed
+      operation: rename
+
+  - name: Removing folder
+    vsphere_folder:
+      hostname: "{{vsphere_address}}"
+      username: "{{vsphere_user}}"
+      password: "{{vsphere_password}}"
+      folder: TestFolderRenamed
+      operation: remove

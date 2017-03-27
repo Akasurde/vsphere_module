@@ -1,0 +1,13 @@
+---
+- name: Include vSphere variables
+  include_vars: vars/vsphere.yml
+
+- name: Create dependency dir
+  file:
+    path: /tmp/vsphere_utils
+    state: directory
+
+- name: Copy dependency libs
+  copy:
+    src: library/vsphere_utils.py
+    dest: /tmp/vsphere_utils/vsphere_utils.py

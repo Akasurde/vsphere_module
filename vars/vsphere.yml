@@ -1,0 +1,4 @@
+---
+vsphere_address: ip_address
+vsphere_user: username@domain
+vsphere_password: password

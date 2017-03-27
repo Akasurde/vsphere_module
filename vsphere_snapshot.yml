@@ -1,0 +1,48 @@
+---
+- name: Testing vSphere snapshot operations
+  hosts: localhost
+  gather_facts: False
+
+  tasks:
+  - include: vsphere_depends.yml
+    tags: always
+
+  - name: Take snapshot
+    vsphere_snapshot:
+      hostname: "{{vsphere_address}}"
+      username: "{{vsphere_user}}"
+      password: "{{vsphere_password}}"
+      vm: Win7-32_Template
+      operation: create
+      snapshot: new_snapshot
+      description: "Snapshot created from ansible"
+
+  - name: Rename snapshot
+    vsphere_snapshot:
+      hostname: "{{vsphere_address}}"
+      username: "{{vsphere_user}}"
+      password: "{{vsphere_password}}"
+      vm: Win7-32_Template
+      operation: rename
+      snapshot: new_snapshot
+      new_snapshot: old_snapshot
+      description: "Snapshot renamed from ansible"
+
+  - name: Revert to snapshot
+    vsphere_snapshot:
+      hostname: "{{vsphere_address}}"
+      username: "{{vsphere_user}}"
+      password: "{{vsphere_password}}"
+      vm: Win7-32_Template
+      operation: revert
+      snapshot: BeforeTest
+
+  - name: Remove snapshot
+    vsphere_snapshot:
+      hostname: "{{vsphere_address}}"
+      username: "{{vsphere_user}}"
+      password: "{{vsphere_password}}"
+      vm: Win7-32_Template
+      operation: remove
+      snapshot: old_snapshot
+      remove_childs: True

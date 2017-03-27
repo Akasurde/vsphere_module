@@ -1,0 +1,67 @@
+---
+- name: Testing vSphere deployment operations
+  hosts: localhost
+  gather_facts: False
+
+  tasks:
+  - include: vsphere_depends.yml
+    tags: always
+
+  - name: Clone VM to template
+    vsphere_deploy:
+      hostname: "{{vsphere_address}}"
+      username: "{{vsphere_user}}"
+      password: "{{vsphere_password}}"
+      vm: Win7-32_Template
+      new_vm: Win7-32_cloned_from_template_to_template
+      folder: DeployTest
+      snapshot: BeforeTest
+      resource_pool: R555_Crypto_4x_Auto
+      datastore: QCM3
+      operation: clone_to_temp
+
+  - name: Clone VM to vm
+    vsphere_deploy:
+      hostname: "{{vsphere_address}}"
+      username: "{{vsphere_user}}"
+      password: "{{vsphere_password}}"
+      vm: Win7-32_Template
+      new_vm: Win7-32_cloned_from_template_to_vm
+      folder: DeployTest
+      snapshot: BeforeTest
+      resource_pool: R555_Crypto_4x_Auto
+      datastore: QCM3
+      operation: clone_to_vm
+
+  - name: Convert VM to template
+    vsphere_deploy:
+      hostname: "{{vsphere_address}}"
+      username: "{{vsphere_user}}"
+      password: "{{vsphere_password}}"
+      vm: Win7-32_cloned_from_template_to_vm
+      operation: convert_to_temp
+
+  - name: Convert template to VM
+    vsphere_deploy:
+      hostname: "{{vsphere_address}}"
+      username: "{{vsphere_user}}"
+      password: "{{vsphere_password}}"
+      vm: Win7-32_cloned_from_template_to_vm
+      resource_pool: R555_Crypto_4x_Auto
+      operation: convert_to_vm
+
+  - name: Remove VM
+    vsphere_deploy:
+      hostname: "{{vsphere_address}}"
+      username: "{{vsphere_user}}"
+      password: "{{vsphere_password}}"
+      vm: Win7-32_cloned_from_template_to_vm
+      operation: remove
+
+  - name: Remove template
+    vsphere_deploy:
+      hostname: "{{vsphere_address}}"
+      username: "{{vsphere_user}}"
+      password: "{{vsphere_password}}"
+      vm: Win7-32_cloned_from_template_to_template
+      operation: remove

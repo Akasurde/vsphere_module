@@ -1,0 +1,42 @@
+---
+- name: Testing vSphere power operations
+  hosts: localhost
+  gather_facts: False
+
+  tasks:
+  - include: vsphere_depends.yml
+    tags: always
+
+  - name: Power on
+    vsphere_power:
+      hostname: "{{vsphere_address}}"
+      username: "{{vsphere_user}}"
+      password: "{{vsphere_password}}"
+      vm: Win7-32_Template
+      operation: poweron
+
+  - name: Suspend
+    vsphere_power:
+      hostname: "{{vsphere_address}}"
+      username: "{{vsphere_user}}"
+      password: "{{vsphere_password}}"
+      vm: Win7-32_Template
+      operation: suspend
+      guest: true
+
+  - name: Power on
+    vsphere_power:
+      hostname: "{{vsphere_address}}"
+      username: "{{vsphere_user}}"
+      password: "{{vsphere_password}}"
+      vm: Win7-32_Template
+      operation: poweron
+
+  - name: Shutdown from guest
+    vsphere_power:
+      hostname: "{{vsphere_address}}"
+      username: "{{vsphere_user}}"
+      password: "{{vsphere_password}}"
+      vm: Win7-32_Template
+      operation: poweroff
+      guest: true

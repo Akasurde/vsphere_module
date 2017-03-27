@@ -1,0 +1,44 @@
+---
+- name: Testing vSphere file transfer operations
+  hosts: localhost
+  gather_facts: False
+
+  tasks:
+  - include: vsphere_depends.yml
+    tags: always
+
+  - name: Upload file to VM
+    vsphere_transfer:
+      hostname: "{{vsphere_address}}"
+      username: "{{vsphere_user}}"
+      password: "{{vsphere_password}}"
+      vm: Win7-32_Template
+      source: /home/tester/test.txt
+      destination: C:\Users\root\Desktop\test.txt
+      guest_username: root
+      guest_password: aaaaaa
+      operation: upload
+
+  - name: Upload folder to VM
+    vsphere_transfer:
+      hostname: "{{vsphere_address}}"
+      username: "{{vsphere_user}}"
+      password: "{{vsphere_password}}"
+      vm: Win7-32_Template
+      source: /home/tester/pyvmomitest/library
+      destination: C:\Users\root\Desktop\library
+      guest_username: root
+      guest_password: aaaaaa
+      operation: upload
+
+  - name: Download file from VM
+    vsphere_transfer:
+      hostname: "{{vsphere_address}}"
+      username: "{{vsphere_user}}"
+      password: "{{vsphere_password}}"
+      vm: win7-32_template
+      source: C:\Users\root\Desktop
+      destination: /home/tester/testfolder
+      guest_username: root
+      guest_password: aaaaaa
+      operation: download

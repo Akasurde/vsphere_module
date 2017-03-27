@@ -1,0 +1,55 @@
+---
+- name: Testing vSphere process operations
+  hosts: localhost
+  gather_facts: False
+
+  tasks:
+  - include: vsphere_depends.yml
+    tags: always
+
+  - name: Start process on VM
+    vsphere_process:
+      hostname: "{{vsphere_address}}"
+      username: "{{vsphere_user}}"
+      password: "{{vsphere_password}}"
+      vm: Win7-32_Template
+      guest_username: root
+      guest_password: aaaaaa
+      program: cmd.exe
+      arguments: "/c ping > C:\\result.txt"
+      operation: start
+
+  - name: Start process on VM
+    vsphere_process:
+      hostname: "{{vsphere_address}}"
+      username: "{{vsphere_user}}"
+      password: "{{vsphere_password}}"
+      vm: Win7-32_Template
+      guest_username: root
+      guest_password: aaaaaa
+      program: cmd.exe
+      wait: false
+      operation: start
+    register: agent
+
+  - name: Stop existing process on VM
+    vsphere_process:
+      hostname: "{{vsphere_address}}"
+      username: "{{vsphere_user}}"
+      password: "{{vsphere_password}}"
+      vm: Win7-32_Template
+      guest_username: root
+      guest_password: aaaaaa
+      pid: "{{agent.process_pid}}"
+      operation: stop
+
+  - name: Stop unexisting process on VM
+    vsphere_process:
+      hostname: "{{vsphere_address}}"
+      username: "{{vsphere_user}}"
+      password: "{{vsphere_password}}"
+      vm: Win7-32_Template
+      guest_username: root
+      guest_password: aaaaaa
+      pid: "{{agent.process_pid}}"
+      operation: stop
